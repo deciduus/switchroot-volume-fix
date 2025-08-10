@@ -5,6 +5,7 @@ release/
 # Build and setup scripts (not needed in repo)
 build_release.bat
 build_release.sh
+build_local.bat
 setup_github.bat
 
 # OS files
