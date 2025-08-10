@@ -1,0 +1,24 @@
+# Switchroot Volume Normalization Fix
+# Disables Android 15 volume normalization that conflicts with Viper4Android
+# 
+# This fixes:
+# - Volume bursting/jumping during playback
+# - Audio levels changing automatically
+# - V4A effects getting overridden
+# - Inconsistent audio experience across apps
+
+# Bypass safe media volume enforcement
+audio.safemedia.bypass=true
+ro.audio.safe_media_volume.disabled=true
+ro.config.safe_media_volume.disabled=true
+
+# Disable loudness control and normalization
+ro.audio.loudness_control.enabled=false
+media.aac.loudness_control=false
+
+# Disable CTA-2075 loudness standard (Android 15 feature)
+ro.audio.cta2075.enabled=false
+
+# Additional safety bypasses for Switchroot compatibility
+ro.audio.ignore_effects=false
+ro.audio.monitorRotation=false

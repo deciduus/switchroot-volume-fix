@@ -1,0 +1,28 @@
+# Build outputs
+release/
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# Windows
+desktop.ini
+
+# macOS
+.AppleDouble
+.LSOverride
+
+# Git
+*.orig
