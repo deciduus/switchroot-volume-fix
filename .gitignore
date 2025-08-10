@@ -2,6 +2,11 @@
 release/
 *.zip
 
+# Build and setup scripts (not needed in repo)
+build_release.bat
+build_release.sh
+setup_github.bat
+
 # OS files
 .DS_Store
 Thumbs.db
