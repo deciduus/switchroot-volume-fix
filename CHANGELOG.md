@@ -1,39 +1,35 @@
 # Changelog
 
-## v1.0 (2024-12-19)
+## Unreleased — source reconciliation
 
-### 🎉 Initial Release
+- Remove the v1.0 boot hook that reapplied properties and restarted audioserver.
+- Match the published v1.1-safe asset's six-property set and version metadata.
+- Point update metadata and installation links to the existing v1.1-safe asset.
+- Replace stale service-log expectations and universal safety/compatibility claims.
+- Make verification read-only, check all six properties, and report failures via
+  exit status. Add offline regression checks.
+- No release asset or Git tag changed; no physical-device testing performed.
 
-**Features:**
-- ✅ Complete Magisk module for fixing Android 15 volume normalization conflicts
-- ✅ Automatic property setting via `system.prop` (persistent across reboots)
-- ✅ Runtime property application via `service.sh` (immediate effect on boot)
-- ✅ Comprehensive verification script (`verify_fix.sh`)
-- ✅ Detailed installation and troubleshooting guide
+## v1.1-safe (2025-08-10)
 
-**What's Fixed:**
-- 🔧 Volume bursting/jumping during audio playback
-- 🔧 Automatic audio level changes overriding user settings
-- 🔧 Viper4Android effects being overridden by system normalization
-- 🔧 Inconsistent audio experience across different apps
-- 🔧 Android 15 CTA-2075 loudness standard interference
+[Published release](https://github.com/deciduus/switchroot-volume-fix/releases/tag/v1.1)
+(tag `v1.1`, marked prerelease). Its notes report removal of `service.sh` to
+address boot loops, Magisk disabling modules, and Hekate boot failures. The ZIP
+contains only the six core properties. Volume fluctuations may still occur.
 
-**Properties Disabled:**
-- `audio.safemedia.bypass=true`
-- `ro.audio.safe_media_volume.disabled=true`
-- `ro.config.safe_media_volume.disabled=true`
-- `ro.audio.loudness_control.enabled=false`
-- `media.aac.loudness_control=false`
-- `ro.audio.cta2075.enabled=false`
+Verified asset: `SwitchrootVolumeNormalizationFix-v1.1-safe.zip`
 
-**Compatibility:**
-- ✅ Switchroot Android 15 (V1 Switch tested)
-- ✅ All Viper4Android variants (V4A FX, ViperFX-RE, etc.)
-- ✅ Other audio processors (AudioFX, JamesDSP)
-- ✅ Magisk v20.4+
+SHA-256: `f61448619f11963d3a0801f4b07d2458d4b9520a1fbae5522d5b6fb163fa6f59`
 
-**Safety:**
-- 🛡️ Non-destructive (uses Magisk overlay system)
-- 🛡️ Easily reversible (uninstall module to revert)
-- 🛡️ No system file modifications
-- 🛡️ Update-friendly (won't interfere with ROM updates)
+The v1.0, v1.1, and v1.2 Git tags all resolve to
+`c87d88c06f3d732fbafb6ff01794ef7868459dbc`, which still contains the old boot hook.
+The tagged source and source archives therefore differ from the published asset.
+The asset's bundled docs and verifier also retain v1.0 instructions.
+
+## v1.0 — historical
+
+Original source used `system.prop` plus a timed `service.sh` that called
+`resetprop` and restarted audioserver during boot. Do not use that behavior as
+a safety or compatibility baseline. The original changelog labeled v1.0
+2024-12-19; repository commits are dated 2025-08-10, so the original release date
+is not established here.
