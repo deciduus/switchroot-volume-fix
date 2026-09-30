@@ -32,3 +32,6 @@ desktop.ini
 
 # Git
 *.orig
+
+# Python test cache
+__pycache__/

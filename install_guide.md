@@ -1,73 +1,38 @@
-# 📦 Quick Installation Guide
+# Installation guide
 
-## For Users Who Want the Simplest Solution
+Use the published **v1.1-safe prerelease** asset:
+[SwitchrootVolumeNormalizationFix-v1.1-safe.zip](https://github.com/deciduus/switchroot-volume-fix/releases/download/v1.1/SwitchrootVolumeNormalizationFix-v1.1-safe.zip).
+GitHub's source archives for the old tags contain the boot script and are not the
+same package. No new release is published by this source update.
 
-### 🚀 **1-Click Install (Recommended)**
+## Before installing
 
-1. **Download**: Get `SwitchrootVolumeNormalizationFix-v1.0.zip` from the [Releases page](https://github.com/deciduus/switchroot-volume-fix/releases)
+- Use a rooted Switchroot device with Magisk v20.4+ (installer minimum).
+- Keep a backup and a known recovery route for disabling Magisk modules if Android
+  does not boot. Do not install if you cannot recover the device.
+- Read the [current README](README.md), including the compatibility limits.
+- Start playback quietly: the properties may bypass safe-volume limits.
 
-2. **Install**: 
-   - Open **Magisk Manager** 
-   - Tap **Modules** → **Install from storage**
-   - Select the downloaded ZIP
-   - Tap **Install**
+## Install and check
 
-3. **Reboot**: Restart your Switch
+1. Download the named release asset, not “Source code (zip)”.
+2. Open Magisk → Modules → Install from storage and select the ZIP.
+3. Reboot, then verify the module is enabled in Magisk.
+4. Copy the current repository's `verify_fix.sh` to `/sdcard/Download/` and run
+   `su -c 'sh /sdcard/Download/verify_fix.sh'` from your terminal.
+5. Test playback at low volume. Correct property values are not proof of an audio fix.
 
-4. **Verify**: Open any audio app - volume should now be stable! 🎵
+The ZIP's bundled guide/verifier predate the properties-only change. A service
+log is not expected, and the module should not restart audio during boot.
+Volume fluctuations may persist; the v1.1 release notes explicitly mention this
+limitation. No universal device or audio-processor compatibility is claimed.
 
----
+## Problems or removal
 
-### 🔍 **Did It Work?**
+If values do not match, check the module status and reboot once. Other modules or
+the ROM may override or ignore them. If audio worsens, disable the module and
+reboot rather than adding an automatic audio restart.
 
-**✅ Signs the fix is working:**
-- No more sudden volume jumps during playback
-- Viper4Android effects stay consistent  
-- Audio levels remain stable across apps
-- No random volume changes
-
-**❓ Want to double-check?**
-Run the verification script:
-```bash
-# Download and run the verification script
-su -c "sh /sdcard/Download/verify_fix.sh"
-```
-
----
-
-### 🛠️ **Troubleshooting**
-
-**Module not showing in Magisk?**
-- Make sure you downloaded the correct ZIP file
-- Check that Magisk is v20.4 or newer
-- Try rebooting and checking again
-
-**Still having volume issues?**
-- Ensure the module is **enabled** in Magisk Manager
-- Reboot your device completely
-- Check if you have other audio modules that might conflict
-
-**Want to uninstall?**
-- Magisk Manager → Modules → Tap the module → Remove → Reboot
-
----
-
-### 🎯 **What This Replaces**
-
-This Magisk module replaces the need for:
-- ❌ Manual Termux commands
-- ❌ Creating files by hand  
-- ❌ Remembering complex property names
-- ❌ Re-applying fixes after updates
-
-**Just install once and forget about it!** 
-
----
-
-### 📞 **Need Help?**
-
-- 📖 Full documentation: `README.md`
-- 🐛 Report issues: [GitHub Issues](https://github.com/deciduus/switchroot-volume-fix/issues)  
-- 💬 Community support: [Switchroot Discord](https://discord.gg/switchroot)
-
-**Happy gaming with perfect audio! 🎮🔊**
+Remove through Magisk → Modules → Remove, then reboot. If Android cannot boot,
+use your established recovery procedure to disable the module. Report unresolved
+issues at [GitHub Issues](https://github.com/deciduus/switchroot-volume-fix/issues).

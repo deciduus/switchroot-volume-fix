@@ -1,7 +1,7 @@
 id=switchroot_volume_normalization_fix
 name=Switchroot Volume Normalization Fix
-version=v1.0
-versionCode=1
+version=v1.1-safe
+versionCode=2
 author=deciduus
-description=A fix for the Android 15 aggressive volume normalization affecting Switchroot + Viper4Android, this fix allows Viper4Android, and other audio enhancers to work seamlessly on Switchroot Android 15.
+description=Properties-only volume normalization workaround for Switchroot Android 15. No boot service restart; effectiveness depends on the ROM and audio stack.
 updateJson=https://raw.githubusercontent.com/deciduus/switchroot-volume-fix/main/update.json

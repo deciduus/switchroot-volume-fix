@@ -1,95 +1,39 @@
-# Switchroot Volume Normalization Fix - Magisk Module
+# Switchroot Volume Normalization Fix
 
-## 🎯 **What This Module Does**
+A properties-only Magisk workaround for volume normalization conflicts on
+Switchroot Android 15 with Viper4Android. It requests six audio property values;
+whether Android honors them depends on the ROM and audio stack.
 
-Fixes Android 15 volume normalization conflicts with Viper4Android on Switchroot devices by disabling aggressive audio processing that causes:
-- Volume bursting/jumping during playbook
-- Audio levels changing automatically 
-- V4A effects getting overridden
-- Inconsistent audio experience across apps
+## Current release and installation
 
-## 📦 **Easy Installation**
+The published asset is **v1.1-safe**, marked as a **prerelease**:
+[SwitchrootVolumeNormalizationFix-v1.1-safe.zip](https://github.com/deciduus/switchroot-volume-fix/releases/download/v1.1/SwitchrootVolumeNormalizationFix-v1.1-safe.zip).
+Read the [release notes](https://github.com/deciduus/switchroot-volume-fix/releases/tag/v1.1)
+and [installation guide](install_guide.md) before installing.
 
-### **Method 1: Magisk Manager (Recommended)**
-1. Download the latest `SwitchrootVolumeNormalizationFix-v1.0.zip` from the [Releases page](https://github.com/deciduus/switchroot-volume-fix/releases)
-2. Open **Magisk Manager**
-3. Tap **Modules** → **Install from storage**
-4. Select the downloaded ZIP file
-5. **Reboot** your device
-6. ✅ **Done!** Volume normalization is now disabled
+1. Have a rooted Switchroot device, Magisk v20.4+ (the installer's minimum), a
+   backup, and a working way to disable modules if Android cannot boot.
+2. Download the named ZIP asset above, not GitHub's **Source code** archives.
+3. In Magisk, choose **Modules → Install from storage**, then select the ZIP.
+4. Reboot and check the module status and properties before testing playback at
+   a low volume.
 
-### **Method 2: Recovery Installation**
-1. Download the ZIP file
-2. Boot into **TWRP** or your custom recovery
-3. Select **Install** → choose the ZIP file
-4. **Swipe to confirm** installation
-5. **Reboot system**
+The existing v1.0, v1.1, and v1.2 Git tags all reference the old v1.0 source,
+including its boot-time audio restart. They do **not** reproduce the v1.1-safe
+asset. This source reconciliation does not change those tags or publish a new
+release. The asset also contains older documentation and a verifier; use the
+current instructions and verifier here instead.
 
-## 🔍 **Verify Installation**
+## Why the boot script was removed
 
-After rebooting, you can verify the fix is working:
+The v1.1 release notes report boot loops, Magisk disabling modules, and Hekate
+boot failures with v1.0. The published safe asset removes `service.sh` and uses
+only `system.prop`. This source follows that approach: no timed boot hook,
+`resetprop` loop, audio service restart, or service log is expected.
 
-1. Open **Termux** (or any terminal app)
-2. Run: `su -c "getprop audio.safemedia.bypass"`
-3. Should return: `true`
+The six values are:
 
-Or check the log file:
-```bash
-su -c "cat /data/local/tmp/switchroot_volume_fix.log"
-```
-
-## ✅ **What You Should Notice**
-
-After installation and reboot:
-- **No more volume jumping** during audio playback
-- **Viper4Android effects work consistently** 
-- **Stable audio levels** across all apps
-- **No interference** from Android's volume normalization
-
-## 🛠️ **Troubleshooting**
-
-**Module not appearing in Magisk Manager?**
-- Make sure you downloaded the correct ZIP file
-- Try rebooting and checking again
-
-**Properties not sticking?**
-- Check if the module is enabled in Magisk Manager
-- Reboot your device
-- Check log: `cat /data/local/tmp/switchroot_volume_fix.log`
-
-**Audio issues after installation?**
-- Restart audio services: `su -c "stop audioserver && start audioserver"`
-- Or simply reboot your device
-
-**Want to uninstall?**
-- Open Magisk Manager → Modules
-- Tap the module → Remove
-- Reboot
-
-## 📱 **Compatibility**
-
-**✅ Tested Working With:**
-- Switchroot Android 15 (V1 Switch)
-- Viper4Android FX (all versions)
-- ViperFX-RE by WSTxda
-- AudioFX, JamesDSP, and other audio processors
-
-**📋 Requirements:**
-- Rooted Switchroot Android device
-- Magisk v20.4+ installed
-- Any Android audio processor (V4A, etc.)
-
-## 🔧 **Technical Details**
-
-This module:
-- Sets system properties via `system.prop` (persistent)
-- Applies properties immediately via `service.sh` (on boot)
-- Disables CTA-2075 loudness standard (Android 15 feature)
-- Bypasses safe media volume enforcement
-- **Safe & reversible** - uses Magisk's overlay system
-
-**Properties Modified:**
-```
+```properties
 audio.safemedia.bypass=true
 ro.audio.safe_media_volume.disabled=true
 ro.config.safe_media_volume.disabled=true
@@ -98,22 +42,53 @@ media.aac.loudness_control=false
 ro.audio.cta2075.enabled=false
 ```
 
-## 🚨 **Important Notes**
+## Verification and limitations
 
-- **Safe to use** - doesn't modify system files directly
-- **Easily reversible** - uninstall module to revert
-- **Boot persistent** - properties survive reboots
-- **Update friendly** - won't interfere with Switchroot updates
+After reboot, a read-only spot check is:
 
-## 📞 **Support**
+```sh
+su -c 'getprop audio.safemedia.bypass'
+```
 
-Having issues? 
-- Check the [Issues page](https://github.com/deciduus/switchroot-volume-fix/issues)
-- Join the [Switchroot Discord](https://discord.gg/switchroot)
-- Post in the [XDA Switchroot thread](https://forum.xda-developers.com/t/switchroot-android.3971835/)
+Expected: `true`. To check all six properties and the module status, copy the
+current repository's `verify_fix.sh` to your device and run it explicitly:
 
----
+```sh
+su -c 'sh /sdcard/Download/verify_fix.sh'
+```
 
-**Made with ❤️ for the Switchroot community by [@deciduus](https://github.com/deciduus)**
+The verifier returns a failure status for missing, disabled, removal-pending,
+or mismatched installations. It does not change properties or restart audio.
+Matching values do **not** prove that normalization is disabled or that playback
+is fixed. The release notes acknowledge that volume fluctuations may remain
+without immediate property application. Automatic audio restarts are deliberately
+not restored here; if playback is worse, disable the module and reboot.
 
-*This module uses the same fix from the original Termux solution but packages it as an easy-to-install Magisk module.*
+- The name “safe” describes the published variant, not a guarantee of boot safety.
+- These properties can bypass safe-media-volume limits. Start quietly and protect
+  your hearing, especially with headphones.
+- Compatibility with every Switch model, ROM, Magisk release, V4A variant, or
+  other audio module has not been established.
+- Systemless installation does not eliminate boot risk or guarantee compatibility
+  with future ROM updates. Uninstalling may require recovery if Android will not boot.
+- This source change has static/host tests only; no physical-device testing was
+  performed for it.
+
+## Troubleshooting and removal
+
+Check that Magisk lists the module as enabled, reboot once after installation,
+and inspect all six property values. Other audio modules or the ROM may override
+or ignore them. A missing old service log is normal for the properties-only
+variant. Do not interpret a leftover v1.0 log as evidence of current behavior.
+
+To remove it, choose **Remove** in Magisk's Modules screen and reboot. If Android
+cannot boot, use your established Magisk/module recovery procedure. Report issues
+with your Switch model, ROM, Magisk version, module version, and property results
+at [GitHub Issues](https://github.com/deciduus/switchroot-volume-fix/issues).
+
+## Contributor checks
+
+Run `python3 -m unittest discover -s tests -v`. These offline checks validate the
+release metadata/property contract, absence of boot hooks, shell syntax, and
+verifier behavior with mocked commands. They do not install the module or validate
+Android audio behavior. See [CHANGELOG.md](CHANGELOG.md) for release provenance.
